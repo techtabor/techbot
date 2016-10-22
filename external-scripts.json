@@ -7,6 +7,7 @@
   "hubot-google-translate",
   "hubot-pugme",
   "hubot-script-spreadsheet",
+  "hubot-google-spreadsheet",
   "hubot-maps",
   "hubot-redis-brain",
   "hubot-rules",
