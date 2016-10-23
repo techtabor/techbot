@@ -1,5 +1,5 @@
 var MsgReply = function () {
-  this.reply = "initial reply value";
+  this.reply = "bit numbers under development";
 }
 
 MsgReply.prototype.getReply = function() {
@@ -75,7 +75,8 @@ function listBits(auth, reply_with, msg) {
       }
     }
     reply_with.setReply(reply);
-    msg.reply(reply_with.getReply());
+    msg.reply("test:" + process.env.CLIENT_SECRET[1]);
+    // msg.reply("bit numbers under development\n" + reply_with.getReply());
   });
 }
 
