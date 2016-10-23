@@ -1,14 +1,12 @@
 module.exports = function(robot) {
     robot.respond(/bitek\?/i, function(msg){
-      var content = fs.readFileSync('client_secret.json');
-      var credentials = JSON.parse(content);
-      var result = authorize(credentials, listBits);
+      // this log the bit numbers to console as a side effect
+      var result = authorize(credentials(), listBits);
       msg.reply("");
     });
 }
 
 var fs = require('fs');
-var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
@@ -64,7 +62,7 @@ function listBits(auth) {
         reply += 'Név, Össz:\n';
         for (var i = 0; i < rows.length; i++) {
           var row = rows[i];
-          // Print columns A(Name) and B (Össz).
+          // Print columns A (Name) and B (Össz).
           reply = reply + row[0] + ": " + row[1] + "\n";
         }
       }
@@ -72,4 +70,13 @@ function listBits(auth) {
     console.log(reply);
     return reply;
   });
+}
+
+function credentials() {
+  var cs = '{"installed":{"client_id":"648831429316-0sm9tr096o2qtct9vn99om9466khlsp0.apps.googleusercontent.com",' +
+    '"project_id":"angular-rhythm-147222","auth_uri":"https://accounts.google.com/o/oauth2/auth",' +
+    '"token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"' +
+    process.env.CLIENT_SECRET +
+    '","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}';
+  return JSON.parse(cs);
 }
