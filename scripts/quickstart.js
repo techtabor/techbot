@@ -1,3 +1,12 @@
+module.exports = function(robot) {
+    robot.respond(/bitek\?/i, function(msg){
+      var content = fs.readFileSync('client_secret.json');
+      var credentials = JSON.parse(content);
+      var result = authorize(credentials, listBits);
+      msg.reply("");
+    });
+}
+
 var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
@@ -10,25 +19,12 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 
-// Load client secrets from a local file.
-fs.readFile('client_secret.json', function processClientSecrets(err, content) {
-  if (err) {
-    console.log('Error loading client secret file: ' + err);
-    return;
-  }
-  // Authorize a client with the loaded credentials, then call the
-  // Google Sheets API.
-  authorize(JSON.parse(content), listBits);
-});
-
 /**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
+ * Create an OAuth2 client with the given credentials, and then execute listBits
  *
  * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+function authorize(credentials) {
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
   var redirectUrl = credentials.installed.redirect_uris[0];
@@ -41,7 +37,7 @@ function authorize(credentials, callback) {
       getNewToken(oauth2Client, callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client);
+      return listBits(oauth2Client);
     }
   });
 }
@@ -57,20 +53,23 @@ function listBits(auth) {
     spreadsheetId: '14bKF4uSlKfjlgtP_t_ktQ4qLQzHfzu85zhWeix5uo5Q',
     range: 'bitek!A2:B20',
   }, function(err, response) {
+    var reply = "";
     if (err) {
-      console.log('The API returned an error: ' + err);
-      return;
-    }
-    var rows = response.values;
-    if (rows.length == 0) {
-      console.log('No data found.');
+      reply = 'The API returned an error: ' + err;
     } else {
-      console.log('Név, Össz:');
-      for (var i = 0; i < rows.length; i++) {
-        var row = rows[i];
-        // Print columns A(Name) and B (Össz).
-        console.log('%s: %s', row[0], row[1]);
+      var rows = response.values;
+      if (rows.length == 0) {
+        reply = 'No data found.';
+      } else {
+        reply += 'Név, Össz:\n';
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          // Print columns A(Name) and B (Össz).
+          reply = reply + row[0] + ": " + row[1] + "\n";
+        }
       }
     }
+    console.log(reply);
+    return reply;
   });
 }
