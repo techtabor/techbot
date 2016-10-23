@@ -13,7 +13,7 @@ MsgReply.prototype.setReply = function(r) {
 module.exports = function(robot) {
     robot.hear(/bitek\?/i, function(msg){
       reply_with = new MsgReply();
-      authorize(getCredentials(), reply_with, msg, listBits);
+      authorize(reply_with, msg, listBits);
     });
 }
 
@@ -29,7 +29,8 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
 var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 
 
-function authorize(credentials, reply_with, msg, callback) {
+function authorize(reply_with, msg, callback) {
+  var credentials = getCredentials();
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
   var redirectUrl = credentials.installed.redirect_uris[0];
@@ -37,15 +38,6 @@ function authorize(credentials, reply_with, msg, callback) {
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
   oauth2Client.setCredentials(JSON.parse(fs.readFileSync(TOKEN_PATH)));
   callback(oauth2Client, reply_with, msg);
-  // Check if we have previously stored a token.
-  // fs.readFile(TOKEN_PATH, function(err, token) {
-  //   if (err) {
-  //     getNewToken(oauth2Client, callback);
-  //   } else {
-  //     oauth2Client.setCredentials(JSON.parse(token));
-  //     callback(oauth2Client, reply_with, msg);
-  //   }
-  // });
 }
 
 /**
@@ -75,7 +67,7 @@ function listBits(auth, reply_with, msg) {
       }
     }
     reply_with.setReply(reply);
-    msg.send("bit numbers under development\n"); //+ reply_with.getReply());
+    msg.send("bit numbers under development\n" + reply_with.getReply());
   });
 }
 
@@ -86,4 +78,13 @@ function getCredentials() {
     process.env.CLIENT_SECRET +
     '","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}';
   return JSON.parse(cs);
+}
+
+function getToken() {
+  var token = '{"access_token":"' +
+    process.env.G_ACCESS_TOKEN +
+    '","token_type":"Bearer","refresh_token":"' +
+    process.env.G_REFRESH_TOKEN +
+    '","expiry_date":1477180321256}';
+  return JSON.parse(token);
 }
