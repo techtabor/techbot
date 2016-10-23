@@ -1,8 +1,8 @@
 // Commands:
 //   bitek? - lists everyone's bits
 module.exports = function(robot) {
-    robot.hear(/bitek\?/i, function(msg){
-      authorize(msg, listBits);
+    robot.hear(/bitek\? (.*)/i, function(msg){
+      authorize(msg, msg.match[1], listBits);
     });
 }
 
@@ -11,7 +11,7 @@ var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
 
-function authorize(msg, callback) {
+function authorize(msg, name_regexp, callback) {
   var credentials = getCredentials();
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
@@ -19,13 +19,13 @@ function authorize(msg, callback) {
   var auth = new googleAuth();
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
   oauth2Client.setCredentials(getToken());
-  callback(oauth2Client, msg);
+  callback(oauth2Client, name_regexp, msg);
 }
 
 /**
  * Print the names and number of bits of students in the specified spreadsheet:
  */
-function listBits(auth, msg) {
+function listBits(auth, name_regexp, msg) {
   var sheets = google.sheets('v4');
   sheets.spreadsheets.values.get({
     auth: auth,
@@ -40,11 +40,12 @@ function listBits(auth, msg) {
       if (rows.length == 0) {
         reply = 'No data found.';
       } else {
-        reply += 'Név, Össz:\n';
         for (var i = 0; i < rows.length; i++) {
           var row = rows[i];
-          // Print columns A (Name) and B (Össz).
-          reply = reply + row[0] + ": " + row[1] + "\n";
+          if (row[0].search(name_regexp) != -1) {
+            // Print columns A (Name) and B (Össz).
+            reply = reply + row[0] + ": " + row[1] + "\n";
+          }
         }
       }
     }
