@@ -1,3 +1,5 @@
+// Commands:
+//   techbot bitek? - lists everyone's bits
 module.exports = function(robot) {
     robot.hear(/bitek\?/i, function(msg){
       authorize(msg, listBits);
