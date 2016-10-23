@@ -2,7 +2,7 @@ module.exports = function(robot) {
     robot.respond(/bitek\?/i, function(msg){
       // this log the bit numbers to console as a side effect
       var result = authorize(credentials(), listBits);
-      msg.reply("");
+      msg.reply("bit numbers under development");
     });
 }
 
