@@ -1,19 +1,6 @@
-var MsgReply = function () {
-  this.reply = "";
-}
-
-MsgReply.prototype.getReply = function() {
-  return this.reply;
-};
-
-MsgReply.prototype.setReply = function(r) {
-    this.reply = r;
-}
-
 module.exports = function(robot) {
     robot.hear(/bitek\?/i, function(msg){
-      reply_with = new MsgReply();
-      authorize(reply_with, msg, listBits);
+      authorize(msg, listBits);
     });
 }
 
@@ -21,29 +8,22 @@ var fs = require('fs');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
-// If modifying these scopes, delete your previously saved credentials
-// at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-    process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 
-
-function authorize(reply_with, msg, callback) {
+function authorize(msg, callback) {
   var credentials = getCredentials();
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
   var redirectUrl = credentials.installed.redirect_uris[0];
   var auth = new googleAuth();
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
-  oauth2Client.setCredentials(JSON.parse(fs.readFileSync(TOKEN_PATH)));
-  callback(oauth2Client, reply_with, msg);
+  oauth2Client.setCredentials(getToken());
+  callback(oauth2Client, msg);
 }
 
 /**
  * Print the names and number of bits of students in the specified spreadsheet:
  */
-function listBits(auth, reply_with, msg) {
+function listBits(auth, msg) {
   var sheets = google.sheets('v4');
   sheets.spreadsheets.values.get({
     auth: auth,
@@ -66,8 +46,7 @@ function listBits(auth, reply_with, msg) {
         }
       }
     }
-    reply_with.setReply(reply);
-    msg.send("bit numbers under development\n" + reply_with.getReply());
+    msg.send("bit numbers under development\n" + reply);
   });
 }
 
