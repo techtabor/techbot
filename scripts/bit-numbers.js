@@ -3,7 +3,7 @@
 module.exports = function(robot) {
     robot.hear(/bitek\? (.*)/i, function(msg){
       console.log(msg.message.user.name);
-      if (msg.message.user.name.match('czeildi|csirke|mdanka|nlaci|porcupine|szgabbor|vizilo') {
+      if (msg.message.user.name.match('csirke|mdanka|nlaci|porcupine|szgabbor|vizilo') {
         authorize(msg, msg.match[1], listBits);
       } else {
         msg.reply("Sorry, you are not allowed to ask everyone's bits. Use mybits? instead.")
