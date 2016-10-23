@@ -5,6 +5,7 @@
   "author": "czeildi@gmail.com",
   "description": "A simple helpful robot for techtabor",
   "dependencies": {
+    "async": "^2.1.2",
     "google-auth-library": "^0.9.9",
     "googleapis": "^14.1.0",
     "hubot": "^2.19.0",

@@ -1,8 +1,19 @@
+var MsgReply = function () {
+  this.reply = "initial reply value";
+}
+
+MsgReply.prototype.getReply = function() {
+  return this.reply;
+};
+
+MsgReply.prototype.setReply = function(r) {
+    this.reply = r;
+}
+
 module.exports = function(robot) {
     robot.respond(/bitek\?/i, function(msg){
-      // this log the bit numbers to console as a side effect
-      var result = authorize(credentials(), listBits);
-      msg.reply("bit numbers under development");
+      reply_with = new MsgReply();
+      authorize(credentials(), reply_with, msg, listBits);
     });
 }
 
@@ -17,12 +28,8 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 
-/**
- * Create an OAuth2 client with the given credentials, and then execute listBits
- *
- * @param {Object} credentials The authorization client credentials.
- */
-function authorize(credentials) {
+
+function authorize(credentials, reply_with, msg, callback) {
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
   var redirectUrl = credentials.installed.redirect_uris[0];
@@ -35,7 +42,7 @@ function authorize(credentials) {
       getNewToken(oauth2Client, callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
-      return listBits(oauth2Client);
+      callback(oauth2Client, reply_with, msg);
     }
   });
 }
@@ -44,7 +51,7 @@ function authorize(credentials) {
  * Print the names and number of bits of students in this spreadsheet:
  * https://docs.google.com/spreadsheets/d/14bKF4uSlKfjlgtP_t_ktQ4qLQzHfzu85zhWeix5uo5Q/edit#gid=1615643101
  */
-function listBits(auth) {
+function listBits(auth, reply_with, msg) {
   var sheets = google.sheets('v4');
   sheets.spreadsheets.values.get({
     auth: auth,
@@ -67,8 +74,8 @@ function listBits(auth) {
         }
       }
     }
-    console.log(reply);
-    return reply;
+    reply_with.setReply(reply);
+    msg.reply(reply_with.getReply());
   });
 }
 
