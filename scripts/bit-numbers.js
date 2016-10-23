@@ -48,7 +48,7 @@ function listBits(auth, msg) {
         }
       }
     }
-    msg.send("bit numbers under development\n" + reply);
+    msg.send(reply);
   });
 }
 
