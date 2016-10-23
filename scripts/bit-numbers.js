@@ -1,9 +1,23 @@
 // Commands:
 //   bitek? - lists everyone's bits, only available to mentors
 //   bitjeim? - tells the number of bits you have
+//   bitdoc - shows link of doc where you can edit bits
 module.exports = function(robot) {
+  var mentor_regex = 'Shell|czeildi|csirke|mdanka|nlaci|porcupine|szgabbor|vizilo'
+
+  robot.hear(/bitdoc/i, function(msg){
+    if (msg.message.user.name.match(mentor_regex)) {
+      msg.send(
+        "https://docs.google.com/spreadsheets/d/" +
+        process.env.HUBOT_GOOGLE_SPREADSHEET_SHEET_KEY +
+        "/edit#gid=1615643101"
+      );
+    } else {
+      msg.reply("Neked nincs jogosultságod ehhez a google sheetshez.");
+    }
+  });
+
     robot.hear(/bitek\?/i, function(msg){
-      var mentor_regex = 'Shell|czeildi|csirke|mdanka|nlaci|porcupine|szgabbor|vizilo'
       if (msg.message.user.name.match(mentor_regex)) {
         authorize(msg, '.*', listBits);
       } else {
