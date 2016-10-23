@@ -70,6 +70,9 @@ function listBits(auth, uname_regexp, msg) {
             reply = reply + row[1] + ": " + row[2] + "\n";
           }
         }
+        if (reply === "") {
+          reply = "Nem szerepelsz a táblázatban, azaz 0 bited van."
+        }
       }
     }
     msg.send(reply);
