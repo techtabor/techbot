@@ -12,8 +12,9 @@ MsgReply.prototype.setReply = function(r) {
 
 module.exports = function(robot) {
     robot.respond(/bitek\?/i, function(msg){
-      reply_with = new MsgReply();
-      authorize(credentials(), reply_with, msg, listBits);
+      msg.reply("test:" + process.env.CLIENT_SECRET[1]);
+      // reply_with = new MsgReply();
+      // authorize(credentials(), reply_with, msg, listBits);
     });
 }
 
