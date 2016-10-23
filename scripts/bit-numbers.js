@@ -1,5 +1,5 @@
 // Commands:
-//   bitek? - lists everyone's bits
+//   bitek? <regex> - lists everyone's bits whose name matches regex
 module.exports = function(robot) {
     robot.hear(/bitek\? (.*)/i, function(msg){
       authorize(msg, msg.match[1], listBits);
