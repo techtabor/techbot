@@ -1,7 +1,7 @@
 // Commands:
-//   me? - echos your name
+//   me - echos your name
 module.exports = function(robot) {
     robot.hear(/me/i, function(msg){
-      msg.reply('hi there, ' + msg.user.name);
+      msg.reply('hi there, '); // + msg.user.name);
     });
 }
