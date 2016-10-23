@@ -1,13 +1,18 @@
 // Commands:
-//   bitek? <regex> - lists everyone's bits whose name matches regex
+//   bitek? - lists everyone's bits, only available to mentors
+//   bitjeim? - tells the number of bits you have
 module.exports = function(robot) {
-    robot.hear(/bitek\? (.*)/i, function(msg){
-      console.log(msg.message.user.name);
-      if (msg.message.user.name.match('csirke|mdanka|nlaci|porcupine|szgabbor|vizilo') {
-        authorize(msg, msg.match[1], listBits);
+    robot.hear(/bitek\?/i, function(msg){
+      var mentor_regex = 'Shell|czeildi|csirke|mdanka|nlaci|porcupine|szgabbor|vizilo'
+      if (msg.message.user.name.match(mentor_regex)) {
+        authorize(msg, '.*', listBits);
       } else {
-        msg.reply("Sorry, you are not allowed to ask everyone's bits. Use mybits? instead.")
+        msg.reply("Neked nincs jogosultságod mindenki bitjeit lekérdezni. Használd a bitjeim? parancsot.");
       }
+    });
+
+    robot.hear(/bitjeim\?/, function(msg) {
+      authorize(msg, msg.message.user.name, listBits);
     });
 }
 
@@ -16,7 +21,7 @@ var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
 
-function authorize(msg, name_regexp, callback) {
+function authorize(msg, uname_regexp, callback) {
   var credentials = getCredentials();
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
@@ -24,18 +29,18 @@ function authorize(msg, name_regexp, callback) {
   var auth = new googleAuth();
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
   oauth2Client.setCredentials(getToken());
-  callback(oauth2Client, name_regexp, msg);
+  callback(oauth2Client, uname_regexp, msg);
 }
 
 /**
  * Print the names and number of bits of students in the specified spreadsheet:
  */
-function listBits(auth, name_regexp, msg) {
+function listBits(auth, uname_regexp, msg) {
   var sheets = google.sheets('v4');
   sheets.spreadsheets.values.get({
     auth: auth,
     spreadsheetId: process.env.HUBOT_GOOGLE_SPREADSHEET_SHEET_KEY,
-    range: 'bitek!A2:B20',
+    range: 'bitek!A2:C22',
   }, function(err, response) {
     var reply = "";
     if (err) {
@@ -47,9 +52,9 @@ function listBits(auth, name_regexp, msg) {
       } else {
         for (var i = 0; i < rows.length; i++) {
           var row = rows[i];
-          if (row[0].search(name_regexp) != -1) {
+          if (row[0].search(uname_regexp) != -1) {
             // Print columns A (Name) and B (Össz).
-            reply = reply + row[0] + ": " + row[1] + "\n";
+            reply = reply + row[1] + ": " + row[2] + "\n";
           }
         }
       }

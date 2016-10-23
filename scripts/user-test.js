@@ -1,12 +1,10 @@
 // Commands:
-//   me - echos your name
+//   me? - responds with username and user id
 module.exports = function(robot) {
-    robot.hear(/me/i, function(msg){
-      msg.reply('hi there, ' +
-        msg.message.user.name +
-        " " + msg.message.user.id +
-        " " + msg.message.user.reply_to +
-        " " + msg.message.user.room
+    robot.hear(/me\?/i, function(msg){
+      msg.reply('hi there' +
+        " " + msg.message.user.name +
+        " " + msg.message.user.id
     );
     });
 }
