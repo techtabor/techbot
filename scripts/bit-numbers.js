@@ -67,7 +67,6 @@ function listBits(auth, uname_regexp, msg) {
         for (var i = 0; i < rows.length; i++) {
           var row = rows[i];
           if (row[0].search(uname_regexp) != -1) {
-            // Print columns A (Name) and B (Össz).
             reply = reply + row[1] + ": " + row[2] + "\n";
           }
         }
