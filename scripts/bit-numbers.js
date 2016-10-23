@@ -11,7 +11,7 @@ MsgReply.prototype.setReply = function(r) {
 }
 
 module.exports = function(robot) {
-    robot.respond(/bitek\?/i, function(msg){
+    robot.hear(/bitek\?/i, function(msg){
       reply_with = new MsgReply();
       authorize(credentials(), reply_with, msg, listBits);
     });
@@ -75,7 +75,7 @@ function listBits(auth, reply_with, msg) {
       }
     }
     reply_with.setReply(reply);
-    msg.reply("bit numbers under development\n" + reply_with.getReply());
+    msg.send("bit numbers under development\n" + reply_with.getReply());
   });
 }
 

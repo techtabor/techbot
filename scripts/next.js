@@ -1,6 +1,6 @@
 module.exports = function(robot) {
-    robot.respond(/next\?/i, function (msg) {
-        msg.reply("2016. November 14.");
+    robot.hear(/next\?/i, function (msg) {
+        msg.send("2016. November 14.");
     }
 );
 }
