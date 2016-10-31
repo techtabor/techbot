@@ -1,8 +1,8 @@
 // Commands:
 //   google <query> - returns query of lmgtfy
 module.exports = function(robot) {
-    robot.hear(/google (.*)/i, function (msg) {
-        msg.reply('http://lmgtfy.com/?q=' + msg.match[1].split(' ').join('+'))
+    robot.respond(/google (.*)/i, function (msg) {
+        msg.send('http://lmgtfy.com/?q=' + msg.match[1].split(' ').join('+'))
     }
 );
 }
