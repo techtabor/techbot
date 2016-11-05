@@ -80,8 +80,8 @@ function listBits(auth, uname_regexp, msg) {
 }
 
 function getCredentials() {
-  var cs = '{"installed":{"client_id":"648831429316-0sm9tr096o2qtct9vn99om9466khlsp0.apps.googleusercontent.com",' +
-    '"project_id":"angular-rhythm-147222","auth_uri":"https://accounts.google.com/o/oauth2/auth",' +
+  var cs = '{"installed":{"client_id":"626461546407-1j4b342lradl1slaj0ngvsbsce41qv7s.apps.googleusercontent.com",' +
+    '"project_id":"sincere-venture-148319","auth_uri":"https://accounts.google.com/o/oauth2/auth",' +
     '"token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"' +
     process.env.CLIENT_SECRET +
     '","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}';
@@ -93,6 +93,6 @@ function getToken() {
     process.env.G_ACCESS_TOKEN +
     '","token_type":"Bearer","refresh_token":"' +
     process.env.G_REFRESH_TOKEN +
-    '","expiry_date":1477180321256}';
+    '","expiry_date":1478372605780}';
   return JSON.parse(token);
 }

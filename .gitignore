@@ -1,4 +1,4 @@
-client_secret.json
 .DS_Store*
 .hubot_history
-slack-techtabor-members.csv
+client_secret.json
+quickstart.js
